@@ -6,28 +6,33 @@ import 'react-datetime-picker/dist/DateTimePicker.css';
 import 'react-calendar/dist/Calendar.css';
 import 'react-clock/dist/Clock.css';
 
-export default function AddEvent() {
+export default function AddEvent({allEvents, setAllEvents}) {
     // ~fetching Firestore data~
-    const [events, setEvents] = useState([]);
     useEffect(() => {
         async function fetchEvents() {
             try {
                 const q = query(collection(firestore, "events"));
                 const querySnapshot = await getDocs(q);
-                const currentEvents = querySnapshot.docs.map(doc => doc.data());    
-                setEvents(currentEvents);
+                const currentEvents = querySnapshot.docs.map(doc => doc.data());
+                for (let i = 0; i < currentEvents.length; i++) {
+                    currentEvents[i].start = new Date(currentEvents[i].start.seconds*1000);
+                    currentEvents[i].end = new Date(currentEvents[i].end.seconds*1000);
+                }
+                setAllEvents(currentEvents);
             } catch (err) {
                 console.log(err);
             } 
         }
         fetchEvents();
-    }, []);
+    }, [setAllEvents]);
 
     // ~add events functionality~
     const event = {
+        title: "",
         startLocation: "",      // default is UCSB
         endLocation: "",        // ride destination
-        departure: new Date(),  // departure date and time
+        start: new Date(),      // departure date and time
+        end: new Date(),
         seats: 0,               // num seats available in the car
         cost: 0,                // cost of ride
         contact: "",            // phone number
@@ -35,8 +40,6 @@ export default function AddEvent() {
     
     // newEvents initialized to a "default" data entry
     const [newEvent, setNewEvent] = useState(event);
-    // allEvents initialized to the current data in Firestore
-    const [allEvents, setAllEvents] = useState(events);
     // for DateTimePicker
     const[value, setValue] = useState(new Date());
     const ref = collection(firestore, "events")
@@ -44,6 +47,8 @@ export default function AddEvent() {
     // add document to collection
     const handleAddEvent = (e) => {
         e.preventDefault();
+        newEvent.end.setHours(newEvent.start.getHours()+1);
+        newEvent.title = newEvent.startLocation + " to " + newEvent.endLocation;
         // spreads current events and pushes new event to allEvents
         setAllEvents([...allEvents, newEvent]);
         
@@ -76,9 +81,9 @@ export default function AddEvent() {
                 <DateTimePicker
                     placeholderText="Departure"
                     style={{marginRight: "10px"}}
-                    selected={newEvent.departure}
+                    selected={newEvent.start}
                     value={value}
-                    onChange={(departure) => setNewEvent({...newEvent, departure})}
+                    onChange={(start) => setNewEvent({...newEvent, start})}
                 />
                 <input 
                     type="num"

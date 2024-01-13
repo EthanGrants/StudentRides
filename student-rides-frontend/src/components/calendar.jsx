@@ -1,9 +1,8 @@
 import { format, getDay, parse, startOfWeek } from "date-fns";
-import { Calendar, dateFnsLocalizer } from "react-big-calendar";
+import { Calendar, Views, dateFnsLocalizer } from "react-big-calendar";
 import moment from "moment";
 import React, { useState } from "react";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 const locales = {
@@ -18,61 +17,53 @@ const localizer = dateFnsLocalizer({
     locales,
 });
 
-const events = [
-    {
-        title: "meeting",
-        // Date(YYYY, MM, DD)
-        // where month is indexed from 0 (Jan) - 11 (Dec)
-        start: moment("2024-01-18T10:00:00").toDate(),
-        end: moment("2024-01-18T11:00:00").toDate(),
-    }
-]
+export default function RidesCalendar({allEvents, setAllEvents}) {
+    // for click event (modal/popup)
+    const [clickEvent, setClickEvent] = useState(null);
 
-export default function RidesCalendar() {
-    const [newEvent, setNewEvent] = useState({title: "", start: "", end: ""});
-    const [allEvents, setAllEvents] = useState(events);
-
-    function handleAddEvent() {
-        // spreads current events and then push new event
-        setAllEvents([...allEvents, newEvent]);
-    }
+    const handleEventClick = (event) => {
+        // Handle the event click, you can show a modal or any other UI component
+        console.log("Event Clicked:", event);
+        // Implement your logic to display a large box with event details here
+        // Stores in click event 
+        setClickEvent(event);
+    };
 
     return (
         <>
-            <h1>Calendar</h1>
-            <h2>Add New Event</h2>
-            <div>
-                <input 
-                    type="text"
-                    placeholder="Add Title"
-                    style={{width:"20%", marginRight:"10px"}}
-                    value={newEvent.title}
-                    onChange={(e) => setNewEvent({...newEvent, title: e.target.value})}
-                />
-                <DatePicker
-                    placeholderText="Start Date"
-                    style={{marginRight: "10px"}}
-                    selected={newEvent.start}
-                    onChange={(start) => setNewEvent({...newEvent, start})}
-                />
-                <DatePicker
-                    placeholderText="End Date"
-                    selected={newEvent.end}
-                    onChange={(end) => setNewEvent({...newEvent, end})}
-                />
-                <button 
-                    style={{marginTop: "10px"}}
-                    onClick={handleAddEvent}>
-                    Add Event
-                </button>
-            </div>
             <Calendar 
                 localizer={localizer}
                 events={allEvents}
                 startAccessor="start"
                 endAccessor="end"
+                defaultView={Views.WEEK}
                 style={{height:500, margin:"50px"}} 
+                onSelectEvent={handleEventClick}
             />
+
+            {clickEvent ?
+                // If an event is clicked then display
+                <div 
+                    // Closes
+                    onClick={() => setClickEvent(null)}
+                    style={{zIndex: 4, height:500, margin:"50px",position:"absolute", width: "100%", height: "100%", display:"flex",
+                            alignItems: "center", justifyContent: "center", top: 0}} 
+                >
+                    <div
+                        // Prevents the object from closing if you click on it 
+                        onClick={(e) => e.stopPropagation()}
+                        style={{border: "2px solid #D3D3D3",borderRadius: "50px",height: 300, width: 300, backgroundColor: "#3174ad"}}
+                    >
+                        {/* content within the pop */}
+                        <h1 style={{ fontFamily: 'sans-serif', fontSize: '24px', color: '#fff' }}>{clickEvent.title}</h1>
+                        <h1 style={{ fontFamily: 'sans-serif', fontSize: '24px', color: '#fff' }}>{clickEvent.start.toLocaleString()}</h1>
+                        <h1 style={{ fontFamily: 'sans-serif', fontSize: '24px', color: '#fff' }}>{clickEvent.seats+" seats available"}</h1>
+                        <h1 style={{ fontFamily: 'sans-serif', fontSize: '24px', color: '#fff' }}>{"Price: $"+clickEvent.cost}</h1>
+                        <h1 style={{ fontFamily: 'sans-serif', fontSize: '24px', color: '#fff' }}>{"Contact: "+clickEvent.contact}</h1>
+                    </div>
+                </div>
+            // Else don't display
+            : null }
         </>
     )
 }

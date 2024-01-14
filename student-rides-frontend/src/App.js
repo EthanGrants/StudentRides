@@ -27,7 +27,7 @@ function App() {
       try {
         const q = query(collection(firestore, "events"));
         const querySnapshot = await getDocs(q);
-        const currentEvents = querySnapshot.docs.map((doc) => doc.data());
+        const currentEvents = querySnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
         for (let i = 0; i < currentEvents.length; i++) {
           currentEvents[i].start = new Date(
             currentEvents[i].start.seconds * 1000
@@ -57,7 +57,7 @@ function App() {
         </>
       )}
       {/* <AuthDetails /> */}
-      <RidesCalendar allEvents={allEvents} setAllEvents={setAllEvents}/>
+      <RidesCalendar allEvents={allEvents} setAllEvents={setAllEvents} isAuth={isAuth}/>
     </div>
   );
 }

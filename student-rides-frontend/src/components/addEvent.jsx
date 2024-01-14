@@ -6,7 +6,6 @@ import "react-datetime-picker/dist/DateTimePicker.css";
 import "react-calendar/dist/Calendar.css";
 import "react-clock/dist/Clock.css";
 import style from "./addEvents.module.css"
-import { Button } from "bootstrap";
 
 export default function AddEvent({ allEvents, setAllEvents }) {
   const event = {
@@ -39,6 +38,7 @@ export default function AddEvent({ allEvents, setAllEvents }) {
       // spreads current events and pushes new event to allEvents
       newEvent.id = doc.id
       setAllEvents([...allEvents, newEvent]);
+      alert("Event was added!")
     } catch (e) {
       console.log(e);
     }

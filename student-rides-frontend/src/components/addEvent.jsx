@@ -5,7 +5,8 @@ import DateTimePicker from "react-datetime-picker";
 import "react-datetime-picker/dist/DateTimePicker.css";
 import "react-calendar/dist/Calendar.css";
 import "react-clock/dist/Clock.css";
-import styles from "./addEvents.module.css"
+import style from "./addEvents.module.css"
+import { Button } from "bootstrap";
 
 export default function AddEvent({ allEvents, setAllEvents }) {
   const event = {
@@ -48,21 +49,23 @@ export default function AddEvent({ allEvents, setAllEvents }) {
       {//<h2 className={styles.header}>StudentRides</h2>
 }
       <div></div>
-      <div className="orangeCircleTwo"></div>
+      <div className={style.orangeCircleTwo}></div>
       <div style={{}}>
         <input
+          className={style.textBox}
           type="text"
           placeholder="Start Location"
-          style={{ width: "20%", paddingLeft: "10px",marginRight: "5px",height: "20px",borderRadius: "30px", borderColor: "grey"}}
+          style={{ marginRight: "5px", height: "20px", borderColor: "grey"}}
           value={newEvent.startLocation}
           onChange={(e) =>
             setNewEvent({ ...newEvent, startLocation: e.target.value })
           }
         />
         <input
+          className={style.textBox}
           type="text"
           placeholder="End Location"
-          style={{ width: "20%", paddingLeft: "10px",marginRight: "10px",height: "20px",borderRadius: "30px", borderColor: "grey"}}
+          style={{ marginRight: "10px",height: "20px", borderColor: "grey"}}
           value={newEvent.endLocation}
           onChange={(e) =>
             setNewEvent({ ...newEvent, endLocation: e.target.value })
@@ -76,9 +79,10 @@ export default function AddEvent({ allEvents, setAllEvents }) {
           onChange={setDateValue}
         />
         <input
+          className={style.textBox}
           type="text"
           placeholder="Seats"
-          style={{ width: "20%", paddingLeft: "10px",paddingLeft: "10px",marginRight: "10px",height: "20px",borderRadius: "30px", borderColor: "grey" }}
+          style={{ paddingLeft: "10px",paddingLeft: "10px",marginRight: "10px",height: "20px", borderColor: "grey" }}
           value={newEvent.seats === 0 ? "" : newEvent.seats}
           onChange={(e) => {
             const seatsValue = e.target.value.replace(/\D/g, ""); // Remove non-numeric characters
@@ -86,9 +90,10 @@ export default function AddEvent({ allEvents, setAllEvents }) {
           }}
         />
         <input
+        className={style.textBox}
          type="text"
          placeholder="Cost"
-         style={{ width: "20%", paddingLeft: "10px",marginRight: "10px", height: "20px",borderRadius: "30px", borderColor: "grey"}}
+         style={{ paddingLeft: "10px",marginRight: "10px", height: "20px", borderColor: "grey"}}
          value={newEvent.cost === 0 ? "" : newEvent.cost}
          onChange={(e) => {
            const costValue = e.target.value.replace(/\D/g, ""); // Remove non-numeric characters
@@ -96,16 +101,17 @@ export default function AddEvent({ allEvents, setAllEvents }) {
          }}
         />
         <input
+          className={style.textBox}
           type="tel"
           placeholder="Contact"
-          style={{ width: "20%", paddingLeft: "10px",marginRight: "10px",height: "20px",borderRadius: "30px", borderColor: "grey" }}
+          style={{ paddingLeft: "10px",marginRight: "10px",height: "20px", borderColor: "grey" }}
           value={newEvent.contact}
           pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}"
           onChange={(e) =>
             setNewEvent({ ...newEvent, contact: e.target.value })
           }
         />
-        <button style={{ marginTop: "10px" }} onClick={handleAddEvent}>
+        <button className={style.button} onClick={handleAddEvent}>
           Add Event
         </button>
       </div>

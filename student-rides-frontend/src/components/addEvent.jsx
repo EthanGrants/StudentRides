@@ -8,23 +8,22 @@ import "react-clock/dist/Clock.css";
 import styles from "./addEvents.module.css";
 
 export default function AddEvent({ allEvents, setAllEvents }) {
-  // ~add events functionality~
   const event = {
-    title: "",
-    startLocation: "", // default is UCSB
-    endLocation: "", // ride destination
-    start: new Date(), // departure date and time
-    end: new Date(),
-    seats: 0, // num seats available in the car
-    cost: 0, // cost of ride
-    contact: "", // phone number
-    author_id: "",
+    title: "",            // car journey (start to end)
+    startLocation: "",    // default is UCSB
+    endLocation: "",      // ride destination
+    start: new Date(),    // departure date and time
+    end: new Date(),      // automatically set to 1 hour after departure
+    seats: 0,             // car seats available
+    cost: 0,              // cost of ride
+    contact: "",          // phone number
+    author: {id: auth.currentUser.uid}, // authenticated user's id
   };
 
-  // newEvents initialized to a "default" data entry
-  const [newEvent, setNewEvent] = useState(event);
   // for DateTimePicker
   const [dateValue, setDateValue] = useState(new Date());
+  // newEvents initialized to a "default" data entry
+  const [newEvent, setNewEvent] = useState(event);
   const ref = collection(firestore, "events");
 
   // add document to collection
@@ -33,11 +32,9 @@ export default function AddEvent({ allEvents, setAllEvents }) {
     newEvent.title = newEvent.startLocation + " to " + newEvent.endLocation;
     newEvent.start = dateValue;
     newEvent.end.setTime(newEvent.start.getTime() + 60 * 60 * 1000);
-    newEvent.author_id = auth.currentUser.uid;
 
     // spreads current events and pushes new event to allEvents
     setAllEvents([...allEvents, newEvent]);
-    console.log(allEvents);
     try {
       // add new event to collection
       addDoc(ref, newEvent);

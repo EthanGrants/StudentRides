@@ -81,14 +81,13 @@ export default function AddEvent({ allEvents, setAllEvents }) {
         <input
           type="text"
           placeholder="End Location"
-          style={{ width: "20%", marginRight: "10px",height: "20px",borderRadius: "30px", borderColor: "grey" }}
+          style={{ width: "20%", marginRight: "10px",height: "20px",borderRadius: "30px", borderColor: "grey"}}
           value={newEvent.endLocation}
           onChange={(e) =>
             setNewEvent({ ...newEvent, endLocation: e.target.value })
           }
         />
         <DateTimePicker
-        className={styles.customDateTimePicker}
           placeholderText="Departure"
           style={{ marginRight: "10px" }}
           selected={newEvent.start}
@@ -96,18 +95,24 @@ export default function AddEvent({ allEvents, setAllEvents }) {
           onChange={setDateValue}
         />
         <input
-          type="num"
+          type="text"
           placeholder="Seats"
           style={{ width: "20%", marginLeft: "5px",marginRight: "10px",height: "20px",borderRadius: "30px", borderColor: "grey" }}
-          value={newEvent.seats}
-          onChange={(e) => setNewEvent({ ...newEvent, seats: e.target.value })}
+          value={newEvent.seats === 0 ? "" : newEvent.seats}
+          onChange={(e) => {
+            const seatsValue = e.target.value.replace(/\D/g, ""); // Remove non-numeric characters
+            setNewEvent({ ...newEvent, seats: seatsValue || 0 });
+          }}
         />
         <input
-          type="num"
-          placeholder="Cost"
-          style={{ width: "20%", marginRight: "10px", height: "20px",borderRadius: "30px", borderColor: "grey"}}
-          value={newEvent.cost}
-          onChange={(e) => setNewEvent({ ...newEvent, cost: e.target.value })}
+         type="text"
+         placeholder="Cost"
+         style={{ width: "20%", marginRight: "10px", height: "20px",borderRadius: "30px", borderColor: "grey"}}
+         value={newEvent.cost === 0 ? "" : newEvent.cost}
+         onChange={(e) => {
+           const costValue = e.target.value.replace(/\D/g, ""); // Remove non-numeric characters
+           setNewEvent({ ...newEvent, cost: costValue || 0 });
+         }}
         />
         <input
           type="tel"

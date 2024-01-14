@@ -7,6 +7,7 @@ import { deleteDoc, doc } from "firebase/firestore";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "react-datepicker/dist/react-datepicker.css";
 import { auth, firestore } from "../firebase";
+import styles from "./addEvents.module.css";
 
 const locales = {
     "en-US": require("date-fns/locale/en-US")
@@ -20,7 +21,20 @@ const localizer = dateFnsLocalizer({
     locales,
 });
 
-export default function RidesCalendar({allEvents, setAllEvents, isAuth}) {
+const formatPhoneNumber = (phoneNumber) => {
+    // Remove non-numeric characters
+    const cleaned = ('' + phoneNumber).replace(/\D/g, '');
+    // Group into 3-3-4 numbers
+    const match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/);
+    //format the phone number as (###)-###-####
+    if (match) {
+      return `(${match[1]})-${match[2]}-${match[3]}`;
+    }
+    // return original if no match is found
+    return phoneNumber;
+  };
+
+  export default function RidesCalendar({allEvents, setAllEvents, isAuth}) {
     // for click event (modal/popup)
     const [clickEvent, setClickEvent] = useState(null);
 
@@ -38,6 +52,7 @@ export default function RidesCalendar({allEvents, setAllEvents, isAuth}) {
 
     return (
         <>
+                 <div className={styles.orangeCircle}></div>
             <Calendar 
                 localizer={localizer}
                 events={allEvents}
@@ -62,11 +77,15 @@ export default function RidesCalendar({allEvents, setAllEvents, isAuth}) {
                         style={{border: "2px solid #D3D3D3",borderRadius: "50px",height: 300, width: 300, backgroundColor: "#3174ad"}}
                     >
                         {/* content within the pop */}
-                        <h1 style={{ fontFamily: 'sans-serif', fontSize: '24px', color: '#fff' }}>{clickEvent.title}</h1>
-                        <h1 style={{ fontFamily: 'sans-serif', fontSize: '24px', color: '#fff' }}>{clickEvent.start.toLocaleString()}</h1>
-                        <h1 style={{ fontFamily: 'sans-serif', fontSize: '24px', color: '#fff' }}>{clickEvent.seats+" seats available"}</h1>
+                        <h1 style={{ fontFamily: 'sans-serif', fontSize: '34px', color: '#fff' }}>{clickEvent.title}</h1>
+                        <h1 style={{ fontFamily: 'sans-serif', fontSize: '24px', color: '#fff' }}>
+                        {clickEvent.start.toLocaleString(undefined, { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric' })}
+                        </h1>
+                        <h1 style={{ fontFamily: 'sans-serif', fontSize: '24px', color: '#fff', textDecoration: 'underline' }}>
+                        {clickEvent.seats + " seats available"}
+                        </h1>
                         <h1 style={{ fontFamily: 'sans-serif', fontSize: '24px', color: '#fff' }}>{"Price: $"+clickEvent.cost}</h1>
-                        <h1 style={{ fontFamily: 'sans-serif', fontSize: '24px', color: '#fff' }}>{"Contact: "+clickEvent.contact}</h1>
+                        <h1 style={{ fontFamily: 'sans-serif', fontSize: '24px', color: '#fff' }}>{"Contact: "+ formatPhoneNumber(clickEvent.contact)}</h1>
                         
                         {/* <FaRegTrashCan onClick={() => deletePost(clickEvent.author_id)}/> */}
                         {isAuth && clickEvent.author.id === auth.currentUser.uid && (

@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { firestore } from "../firebase";
-import { collection, query, getDocs, addDoc } from "@firebase/firestore";
+import React, { useState } from "react";
+import { auth, firestore } from "../firebase";
+import { collection, addDoc } from "@firebase/firestore";
 import DateTimePicker from "react-datetime-picker";
 import "react-datetime-picker/dist/DateTimePicker.css";
 import "react-calendar/dist/Calendar.css";
@@ -8,27 +8,6 @@ import "react-clock/dist/Clock.css";
 import styles from "./addEvents.module.css";
 
 export default function AddEvent({ allEvents, setAllEvents }) {
-  // ~fetching Firestore data~
-  useEffect(() => {
-    async function fetchEvents() {
-      try {
-        const q = query(collection(firestore, "events"));
-        const querySnapshot = await getDocs(q);
-        const currentEvents = querySnapshot.docs.map((doc) => doc.data());
-        for (let i = 0; i < currentEvents.length; i++) {
-          currentEvents[i].start = new Date(
-            currentEvents[i].start.seconds * 1000
-          );
-          currentEvents[i].end = new Date(currentEvents[i].end.seconds * 1000);
-        }
-        setAllEvents(currentEvents);
-      } catch (err) {
-        console.log(err);
-      }
-    }
-    fetchEvents();
-  }, [setAllEvents]);
-
   // ~add events functionality~
   const event = {
     title: "",
@@ -39,6 +18,7 @@ export default function AddEvent({ allEvents, setAllEvents }) {
     seats: 0, // num seats available in the car
     cost: 0, // cost of ride
     contact: "", // phone number
+    author_id: "",
   };
 
   // newEvents initialized to a "default" data entry
@@ -50,9 +30,10 @@ export default function AddEvent({ allEvents, setAllEvents }) {
   // add document to collection
   const handleAddEvent = (e) => {
     e.preventDefault();
+    newEvent.title = newEvent.startLocation + " to " + newEvent.endLocation;
     newEvent.start = dateValue;
     newEvent.end.setTime(newEvent.start.getTime() + 60 * 60 * 1000);
-    newEvent.title = newEvent.startLocation + " to " + newEvent.endLocation;
+    newEvent.author_id = auth.currentUser.uid;
 
     // spreads current events and pushes new event to allEvents
     setAllEvents([...allEvents, newEvent]);
@@ -67,7 +48,7 @@ export default function AddEvent({ allEvents, setAllEvents }) {
 
   return (
     <div>
-      <h2 className={styles.header}>StudentRides</h2>
+      {/* <h2 className={styles.header}>StudentRides</h2> */}
       <div style={{}}>
         <input
           type="text"

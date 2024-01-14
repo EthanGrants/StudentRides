@@ -1,6 +1,7 @@
 import { signInWithEmailAndPassword } from "firebase/auth";
 import React, { useState } from "react";
 import { auth } from "../../firebase";
+import style from "./AuthForms.module.css"
 
 const SignIn = ({ setIsAuth }) => {
     const [email, setEmail] = useState("");
@@ -20,18 +21,19 @@ const SignIn = ({ setIsAuth }) => {
     return (
         <div className="sign-in">
             <form onSubmit={signIn}>
-                <h2>Log In</h2>
                 <input 
+                    className={style.textBox}
                     type="email"
                     placeholder="Email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}/>
                 <input 
+                    className={style.textBox}
                     type="password"
                     placeholder="Password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}/>
-                <button type="submit">Submit</button>
+                <button className={style.button} type="submit">Login</button>
             </form>
         </div>
     )

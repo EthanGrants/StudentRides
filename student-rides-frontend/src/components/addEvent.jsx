@@ -47,7 +47,8 @@ export default function AddEvent({ allEvents, setAllEvents }) {
     <div>
       {//<h2 className={styles.header}>StudentRides</h2>
 }
-      <div className="orangeCircle"></div>
+      <div></div>
+      <div className="orangeCircleTwo"></div>
       <div style={{}}>
         <input
           type="text"

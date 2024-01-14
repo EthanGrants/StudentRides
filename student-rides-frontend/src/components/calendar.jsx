@@ -57,6 +57,7 @@ const formatPhoneNumber = (phoneNumber) => {
     return (
         <>
                  <div className={styles.orangeCircle}></div>
+                 <div className={styles.orangeCircleTwo}></div>
             <Calendar 
                 localizer={localizer}
                 events={allEvents}

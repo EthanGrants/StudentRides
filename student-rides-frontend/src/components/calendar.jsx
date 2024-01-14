@@ -1,9 +1,12 @@
 import { format, getDay, parse, startOfWeek } from "date-fns";
 import { Calendar, Views, dateFnsLocalizer } from "react-big-calendar";
-import moment from "moment";
 import React, { useState } from "react";
+import { FaRegTrashCan } from "react-icons/fa6";
+import { AiOutlineEdit } from "react-icons/ai";
+import { deleteDoc, doc } from "firebase/firestore";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "react-datepicker/dist/react-datepicker.css";
+import { auth, firestore } from "../firebase";
 
 const locales = {
     "en-US": require("date-fns/locale/en-US")
@@ -17,16 +20,20 @@ const localizer = dateFnsLocalizer({
     locales,
 });
 
-export default function RidesCalendar({allEvents, setAllEvents}) {
+export default function RidesCalendar({allEvents, setAllEvents, isAuth}) {
     // for click event (modal/popup)
     const [clickEvent, setClickEvent] = useState(null);
 
     const handleEventClick = (event) => {
         // Handle the event click, you can show a modal or any other UI component
-        console.log("Event Clicked:", event);
         // Implement your logic to display a large box with event details here
         // Stores in click event 
         setClickEvent(event);
+    };
+
+    const deleteEvent = async (id) => {
+        const event = doc(firestore, "events", id);
+        await deleteDoc(event);
     };
 
     return (
@@ -60,6 +67,21 @@ export default function RidesCalendar({allEvents, setAllEvents}) {
                         <h1 style={{ fontFamily: 'sans-serif', fontSize: '24px', color: '#fff' }}>{clickEvent.seats+" seats available"}</h1>
                         <h1 style={{ fontFamily: 'sans-serif', fontSize: '24px', color: '#fff' }}>{"Price: $"+clickEvent.cost}</h1>
                         <h1 style={{ fontFamily: 'sans-serif', fontSize: '24px', color: '#fff' }}>{"Contact: "+clickEvent.contact}</h1>
+                        
+                        {/* <FaRegTrashCan onClick={() => deletePost(clickEvent.author_id)}/> */}
+                        {isAuth && clickEvent.author.id === auth.currentUser.uid && (
+                            <>
+                                <button
+                                onClick={() => {
+                                    deleteEvent(clickEvent.id);
+                                }}
+                                >
+                                    <FaRegTrashCan/>
+                                </button>
+                                <button><AiOutlineEdit /></button>
+                            </>
+                        )}
+                        
                     </div>
                 </div>
             // Else don't display

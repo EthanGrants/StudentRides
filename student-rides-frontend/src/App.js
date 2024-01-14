@@ -53,7 +53,7 @@ function App() {
       ) : (
         <>
           <AddEvent allEvents={allEvents} setAllEvents={setAllEvents}/>
-          <button onClick={userSignOut}>Log Out</button>
+          <button onClick={userSignOut} className="log-out-button">Log Out</button>
         </>
       )}
       {/* <AuthDetails /> */}

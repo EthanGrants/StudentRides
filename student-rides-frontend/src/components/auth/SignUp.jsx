@@ -8,6 +8,14 @@ const SignUp = () => {
 
     const signUp = (e) => {
         e.preventDefault();
+        if(password.length < 6) {
+            alert("Password must be at least 6 characters long");
+            return; // Stop further execution
+        }
+        else {
+            alert("Success!");
+        }
+
         createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
             console.log(userCredential)

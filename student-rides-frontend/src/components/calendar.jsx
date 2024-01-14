@@ -45,9 +45,13 @@ const formatPhoneNumber = (phoneNumber) => {
         setClickEvent(event);
     };
 
+    
     const deleteEvent = async (id) => {
         const event = doc(firestore, "events", id);
         await deleteDoc(event);
+        const events = allEvents.filter(event => (event.id !== id));
+        setAllEvents(events);
+        setClickEvent(null);
     };
 
     return (
@@ -90,6 +94,7 @@ const formatPhoneNumber = (phoneNumber) => {
                         {/* <FaRegTrashCan onClick={() => deletePost(clickEvent.author_id)}/> */}
                         {isAuth && clickEvent.author.id === auth.currentUser.uid && (
                             <>
+                                {console.log(clickEvent.id)}
                                 <button
                                 onClick={() => {
                                     deleteEvent(clickEvent.id);

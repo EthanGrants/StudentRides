@@ -27,17 +27,17 @@ export default function AddEvent({ allEvents, setAllEvents }) {
   const ref = collection(firestore, "events");
 
   // add document to collection
-  const handleAddEvent = (e) => {
+  const handleAddEvent = async (e) => {
     e.preventDefault();
     newEvent.title = newEvent.startLocation + " to " + newEvent.endLocation;
     newEvent.start = dateValue;
     newEvent.end.setTime(newEvent.start.getTime() + 60 * 60 * 1000);
-
-    // spreads current events and pushes new event to allEvents
-    setAllEvents([...allEvents, newEvent]);
     try {
       // add new event to collection
-      addDoc(ref, newEvent);
+      let doc = await addDoc(ref, newEvent);
+      // spreads current events and pushes new event to allEvents
+      newEvent.id = doc.id
+      setAllEvents([...allEvents, newEvent]);
     } catch (e) {
       console.log(e);
     }

@@ -68,11 +68,11 @@ export default function AddEvent({ allEvents, setAllEvents }) {
   return (
     <div>
       <h2 className={styles.header}>StudentRides</h2>
-      <div>
+      <div style={{}}>
         <input
           type="text"
           placeholder="Start Location"
-          style={{ width: "20%", marginRight: "10px" }}
+          style={{ width: "20%", marginRight: "5px",height: "20px",borderRadius: "30px", borderColor: "grey"}}
           value={newEvent.startLocation}
           onChange={(e) =>
             setNewEvent({ ...newEvent, startLocation: e.target.value })
@@ -81,13 +81,14 @@ export default function AddEvent({ allEvents, setAllEvents }) {
         <input
           type="text"
           placeholder="End Location"
-          style={{ width: "20%", marginRight: "10px" }}
+          style={{ width: "20%", marginRight: "10px",height: "20px",borderRadius: "30px", borderColor: "grey" }}
           value={newEvent.endLocation}
           onChange={(e) =>
             setNewEvent({ ...newEvent, endLocation: e.target.value })
           }
         />
         <DateTimePicker
+        className={styles.customDateTimePicker}
           placeholderText="Departure"
           style={{ marginRight: "10px" }}
           selected={newEvent.start}
@@ -97,21 +98,21 @@ export default function AddEvent({ allEvents, setAllEvents }) {
         <input
           type="num"
           placeholder="Seats"
-          style={{ width: "20%", marginRight: "10px" }}
+          style={{ width: "20%", marginLeft: "5px",marginRight: "10px",height: "20px",borderRadius: "30px", borderColor: "grey" }}
           value={newEvent.seats}
           onChange={(e) => setNewEvent({ ...newEvent, seats: e.target.value })}
         />
         <input
           type="num"
           placeholder="Cost"
-          style={{ width: "20%", marginRight: "10px" }}
+          style={{ width: "20%", marginRight: "10px", height: "20px",borderRadius: "30px", borderColor: "grey"}}
           value={newEvent.cost}
           onChange={(e) => setNewEvent({ ...newEvent, cost: e.target.value })}
         />
         <input
           type="tel"
           placeholder="Contact"
-          style={{ width: "20%", marginRight: "10px" }}
+          style={{ width: "20%", marginRight: "10px",height: "20px",borderRadius: "30px", borderColor: "grey" }}
           value={newEvent.contact}
           pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}"
           onChange={(e) =>
